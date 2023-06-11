@@ -1,0 +1,29 @@
+# vim: set ft=bash:
+#
+install_asdf() {
+	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.11.3
+	grep -E asdf.sh ~/.bashrc || echo '. $HOME/.asdf/asdf.sh' >> ~/.bashrc
+	grep -E asdf.bash ~/.bashrc || echo '. "$HOME/.asdf/completions/asdf.bash"' >> ~/.bashrc
+}
+
+install_local_plugins() {
+	cat .tool-plugins | xargs -i bash -c "asdf plugin add {}"
+}
+
+install_local_tooling() {
+	asdf install
+}
+
+setup_direnv() {
+	grep -E direnv ~/.bashrc || echo 'eval "$(direnv hook zsh)"' >> ~/.bashrc
+}
+
+setup() {
+	install_asdf && source ~/.bashrc
+	install_local_plugins
+	install_local_tooling
+	setup_direnv && source ~/.bashrc
+}
+
+
+$*
